@@ -2,10 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 date_default_timezone_set("Asia/Dhaka");
 class Api extends CI_Controller {
+	protected $timesinplay;
+	protected $timespregame;
 	function __construct()
     {
 			parent::__construct();
 			$this->load->driver('cache');
+			$this->timesinplay=0;
+			$this->timespregame=0;
     }
 	public function get_pregame($olddate=null){
 		$prediction=null;
@@ -121,16 +125,14 @@ class Api extends CI_Controller {
 				$data['pick_hdp'],
 				$data['pick_ou']
 			));
+		 };
+		 if($this->timesinplay<3){
+			sleep(15);
+			$this->timesinplay=$this->timesinplay+1;
+			$this->get_running_cron();
+		 }else if($this->timesinplay==3){
+			$this->timesinplay=0;
 		 }
-	}
-
-	public function run_cronjob(){
-		set_time_limit(20);
-		while(true){
-			$dt=new DateTime();
-			$this->cache->file->save('test',  $dt->format('Y-m-d H:i:s') . "<br>", 0);
-			sleep(10);
-		}
 	}
 	public function get_pregame_cron(){
 		$soap_client=new SoapClient('http://118.107.179.27:13881/Vig_WebService/Vig_WebService.asmx?WSDL');
@@ -176,7 +178,14 @@ class Api extends CI_Controller {
 					$data['pick_hdp'],
 					$data['pick_ou']
 				));
-	}
+	};
+	if($this->timespregame<3){
+		sleep(15);
+		$this->timespregame=$this->timespregame+1;
+		$this->get_pregame_cron();
+	 }else if($this->timespregame==3){
+		$this->timespregame=0;
+	 }
 }
 
 	public function matchWdate($matchdt){

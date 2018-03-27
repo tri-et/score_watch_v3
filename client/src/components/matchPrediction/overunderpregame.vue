@@ -3,7 +3,7 @@
     <div class="icongold"><img :src="setSrcIconUnder(items,live)" alt="" width="24" height="24" :key="1233"></div>
     <div class="teamname">{{items.pick_ou=="O"?'Over':'Under'}}&nbsp;</div>
     <div class="odds">
-      <span>{{'['+items.score_home+':'+items.score_away+']'}}</span>
+      <span>[0:0]</span>
       <span>{{items.sys_ou}}</span>
       <span>@</span>
       <span>{{items.pick_ou=="O"?items.sys_odds_over:items.sys_odds_under}}</span>
