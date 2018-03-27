@@ -36,8 +36,8 @@ export default {
     items: {
       type: Object
     },
-    teamscore:{
-      type:Object
+    teamscore: {
+      type: Object
     }
   },
   data() {
@@ -58,8 +58,8 @@ export default {
     setIcon(data, live) {
       var url = pred_gold;
       let hdp = parseFloat(data.sys_hdp);
-      let score_home = parseInt(this.teamscore.score_home) + (hdp>0?hdp:0);
-      let score_away = parseInt(this.teamscore.score_away) + (hdp<0?Math.abs(hdp):0);
+      let score_home =parseInt(this.teamscore.score_home) + (hdp > 0 ? hdp : 0) - parseInt(data.score_home);
+      let score_away =parseInt(this.teamscore.score_away) + (hdp < 0 ? Math.abs(hdp) : 0) - parseInt(data.score_away);
       if (live == "expiredinplay" || live == "expiredpregame") {
         switch (data.pick_hdp) {
           case "H":

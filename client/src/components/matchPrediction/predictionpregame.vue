@@ -6,7 +6,7 @@
     </div>
     <resize-observer @notify="handleResize" />
     <div class="odds">
-      <span v-show="live!='pregame'">&nbsp;{{'['+items.score_home+':'+items.score_away+']'}}</span>
+      <span>[0:0]</span>
       <span>{{items.sys_hdp}}</span>
       <span>@</span>
       <span>{{items.pick_hdp=="H"?items.sys_odds_home:items.sys_odds_away}}</span>
