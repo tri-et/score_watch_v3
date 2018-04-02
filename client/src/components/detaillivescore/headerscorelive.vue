@@ -1,11 +1,12 @@
 <template>
   <div class="headerscore">
-    <div class="homescore">{{items.score_home}}</div>
+    <div class="homescore">{{items[12]}}</div>
     <div class="match-time">
-      <div class="hour" :style="{'background-color':typePrediction.colorheader}">{{items.match_minute|matchDate(items.match_dt)}}</div>
-      <div class="minute" :style="{'background-color':typePrediction.colorprediction}">{{items.match_period|period}}</div>
+      <div class="hour" :style="{'background-color':typeLivescore.bgheader,'color':typeLivescore.colorheader}">{{items[4]|setTime(matchDate(items[10]))}}</div>
+      <div class="minute" v-show="items[4]!='HT'" :style="{'background-color':typeLivescore.bglivescore,'color':typeLivescore.colorlivescore}">{{items[3]|setStatus(matchDate(items[10]))}}</div>
+      <div class="minute" v-show="items[4]=='HT'" :style="{'background-color':typeLivescore.bglivescore,'color':typeLivescore.colorlivescore}">45'</div>
     </div>
-    <div class="awayscore">{{items.score_away}}</div>
+    <div class="awayscore">{{items[13]}}</div>
   </div>
 </template>
 <script>
@@ -29,28 +30,52 @@ export default {
       }
       return period;
     },
-    matchDate(value,match_dt) {
-      switch (value) {
+    setTime(val, match_dt) {
+      if (val == "") {
+        return match_dt;
+      } else {
+        return val;
+      }
+    },
+    setStatus(val, match_dt) {
+      var st = "";
+      switch (val) {
+        case "-1":
+          st = match_dt;
+          break;
+        case "1":
+        case "3":
+          st = "Live";
+          break;
         case "0":
-          var date = new Date(match_dt.replace(/-/g, "/"));
-          return (
-            date.getHours() +
-            ":" +
-            (date.getMinutes() == 0 ? "00" : date.getMinutes())
-          );
+          st = "Kickoff";
           break;
         default:
-          return value + "'";
+          st = val;
           break;
       }
+      return st;
+    }
+  },
+  methods: {
+    matchDate(value) {
+      if (typeof value === 'string') {
+        value = value.replace(/-/g, '/')
+      }
+      var date = new Date(value);
+      return (
+        date.getHours() +
+        ":" +
+        (date.getMinutes() == 0 ? "00" : date.getMinutes())
+      );
     }
   },
   computed: {
-    ...mapGetters(["typePrediction"])
+    ...mapGetters(["typeLivescore"])
   },
   props: {
     items: {
-      type: Object
+      type: Array
     }
   }
 };

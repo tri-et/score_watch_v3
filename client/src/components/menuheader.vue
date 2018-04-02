@@ -10,17 +10,17 @@
         </li>
         <li>
           <router-link :to="{ path: '/'}" @click.native="selectMenu('predictions')">
-            <div>predictions</div>
+            <div>{{titleMenu}}</div>
             <div class="circle-content">
               <div class="circle" :class="{'circle-isvisibel':menuActive=='predictions'}"></div>
             </div>
           </router-link>
         </li>
-        <li style="visibility:hidden !important">
-          <router-link :to="{ path: '/livescore'}" @click.native="selectMenu('pregame')">
+        <li>
+          <router-link :to="{ path: '/livescore'}" @click.native="selectMenu('livescores')">
             <div>live score</div>
             <div class="circle-content">
-              <div class="circle" :class="{'circle-isvisibel':menuActive=='pregame'}"></div>
+              <div class="circle" :class="{'circle-isvisibel':menuActive=='livescores'}"></div>
             </div>
           </router-link>
         </li>
@@ -34,13 +34,14 @@
         </li>
       </ul>
     </nav>
+    <resize-observer @notify="setTitleMenu" />
   </header>
 </template>
 <script>
 import { mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["menuActive"])
+    ...mapGetters(["menuActive","titleMenu"])
   },
   methods: {
     openHelp() {
@@ -48,9 +49,21 @@ export default {
     },
     openSideBar() {
       this.$store.commit("setisopenMenuSideBar", true);
+      alert('sds');
     },
     selectMenu(menuType) {
       this.$store.commit("setmenuActive", menuType);
+    },
+    setTitleMenu(){
+      var widthHeader=this.$el.querySelector("nav").offsetWidth
+      if(widthHeader>=843){
+        this.$store.commit("settitleMenu", "predictions");
+      }
+
+      if(widthHeader>=672){
+        this.$store.commit("sethideDetail", false);
+        this.$store.commit("setisOpenDetailPrediction", false);
+      }
     }
   }
 };

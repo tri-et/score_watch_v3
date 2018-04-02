@@ -8,7 +8,7 @@
       <template v-for="(item,index) in items.detail">
         <prediction :teamscore="{'score_home':items.score_home,'score_away':items.score_away}" :live="typeprediction" :items="item" :key="index" v-show="typeprediction=='expiredinplay'||typeprediction=='inplay'"></prediction>
       </template>
-      <predictionpregame :live="typeprediction" :items="items" v-show="typeprediction=='expiredpregame'"></predictionpregame>
+      <predictionpregame :live="typeprediction" :items="items" v-show="typeprediction=='expiredpregame'||typeprediction=='pregame'"></predictionpregame>
       <template v-for="(item,index) in items.detailou">
         <overunder :teamscore="{'score_home':items.score_home,'score_away':items.score_away}" :live="typeprediction" :items="item" :key="index+item.match_code"></overunder>
       </template>

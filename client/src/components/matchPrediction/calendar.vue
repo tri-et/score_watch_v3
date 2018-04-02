@@ -89,7 +89,7 @@ export default {
     setDateCenter() {
       let outer = this.$el.querySelector(".date").clientWidth;
       let inner = this.$el.querySelector(".date").scrollWidth;
-      $(this.$el.querySelector(".date")).scrollLeft((inner - outer) / 2 - 45);
+      $(this.$el.querySelector(".date")).scrollLeft((inner - outer) / 2);
     },
     selectDate(item, index,event) {
       this.setDateSelectedCenter(event.currentTarget.offsetLeft)

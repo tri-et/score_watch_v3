@@ -11,15 +11,6 @@
       <span>@</span>
       <span>{{items.pick_hdp=="H"?items.sys_odds_home:items.sys_odds_away}}</span>
     </div>
-    <div class="timer" v-show="live=='inplay'">
-      <countdown :items="items"></countdown>
-    </div>
-    <div class="timer" v-show="live=='expiredinplay'">
-      <span>{{'expired['+items.minutes+'\']'}}</span>
-    </div>
-    <div class="new" v-show="isnew">
-      <span>new</span>
-    </div>
   </div>
 </template>
 <script>

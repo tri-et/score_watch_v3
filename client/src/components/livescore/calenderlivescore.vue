@@ -19,7 +19,6 @@
 import $ from "jquery";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import GetData from "../../modules/get_data";
-let getdata = new GetData();
 
 export default {
   data() {
@@ -89,14 +88,14 @@ export default {
     setDateCenter() {
       let outer = this.$el.querySelector(".date").clientWidth;
       let inner = this.$el.querySelector(".date").scrollWidth;
-      $(this.$el.querySelector(".date")).scrollLeft((inner - outer) / 2 - 70);
+      $(this.$el.querySelector(".date")).scrollLeft((inner - outer) / 2);
     },
     selectDate(item, index, event) {
-      // this.setDateSelectedCenter(event.currentTarget.offsetLeft);
-      // var oldDate =
-      //   item.getFullYear() + "-" + (item.getMonth() + 1) + "-" + item.getDate();
-      // this.$parent.getData.getDataPreInplay(this.$parent, oldDate);
-      // this.$store.commit("setcalendarPre", index);
+      this.setDateSelectedCenter(event.currentTarget.offsetLeft);
+      this.$store.commit("setloadingLivescore",true);
+      var oldDate =item.getFullYear() + "-" + (item.getMonth() + 1) + "-" + item.getDate();
+      this.$parent.getData.getDataLiveScore(this.$parent, oldDate);
+      this.$store.commit("setcalendarPre", index);
     },
     setDateSelectedCenter(currentPositionclick) {
       let outer = this.$el.querySelector(".date").clientWidth;
@@ -122,7 +121,6 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
 }
 .left-arrow {
   width: 30px;
@@ -149,7 +147,11 @@ export default {
 .date {
   flex: 1;
   white-space: nowrap;
-  overflow: hidden;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.date::-webkit-scrollbar {
+  display: none !important;
 }
 .date div {
   display: inline-block;
