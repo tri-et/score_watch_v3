@@ -1,5 +1,5 @@
 <template>
-  <div class="predictions">
+  <div class="livescore">
     <div class="colleft">
       <div class="calendar">
         <calendar></calendar>
@@ -7,35 +7,15 @@
       <div class="container">
         <div class="content">
           <div class="inplay">
-            <div class="header header--inplay">in-play</div>
-            <div class="nomatch" v-show="leagueInplay.length==0">No matches to show</div>
-            <template v-for="(item,index) in leagueInplay">
-              <league :key="index+'inplay'" :leaguename="item.league"></league>
-              <matchprediction v-for="(items,index) in inplayprediction" :key="index+items.idmatch" :items="items" v-if="item.league==items.league" typeprediction="inplay">
-              </matchprediction>
-            </template>
-            <div class="header header--expired">Expired in-play</div>
-            <div class="nomatch" v-show="leagueExpInplay.length==0">No matches to show</div>
-            <template v-for="(item,index) in leagueExpInplay">
-              <league :key="index+'expinplay'" :leaguename="item.league"></league>
-              <matchprediction v-for="(items,index) in inplayExpired" :key="index+items.idmatch" :items="items" v-if="item.league==items.league" typeprediction="expiredinplay">
-              </matchprediction>
+            <template v-for="(item,index) in leagueLiveScoreLeft">
+              <league :key="index+'inplay'" :leaguename="item"></league>
+              <matchlivescore :bordercolor="item.leagueColorCode" :items="items" v-for="(items,index) in livescore" v-if="items[5]==item.league" :key="index+items[0]"></matchlivescore>
             </template>
           </div>
           <div class="pregame">
-            <div class="header header--pregame">Pregame</div>
-            <div class="nomatch" v-show="leaguePregame.length==0">No matches to show</div>
-            <template v-for="(item,index) in leaguePregame">
-              <league :key="index+'pregame'" :leaguename="item.league"></league>
-              <matchprediction v-for="(items,index) in pregame" :key="index+items.idmatch" :items="items" v-if="item.league==items.league" typeprediction="pregame">
-              </matchprediction>
-            </template>
-            <div class="header header--expired">Expired Pre-Game</div>
-            <div class="nomatch" v-show="leagueExpPregame.length==0">No matches to show</div>
-            <template v-for="(item,index) in leagueExpPregame">
-              <league :key="index+'exppregame'" :leaguename="item.league"></league>
-              <matchprediction v-for="(items,index) in expiredPregame" :key="index+items.idmatch" :items="items" v-if="item.league==items.league" typeprediction="expiredpregame">
-              </matchprediction>
+            <template v-for="(item,index) in leagueLiveScoreRight">
+              <league :key="index+'pregame'" :leaguename="item"></league>
+              <matchlivescore :bordercolor="item.leagueColorCode" :items="items" v-for="(items,index) in livescore" v-if="items[5]==item.league" :key="index+items[0]" ></matchlivescore>
             </template>
           </div>
         </div>
@@ -52,26 +32,22 @@
   </div>
 </template>
 <script>
-import league from "@/components/league";
-import matchprediction from "@/components/matchPrediction/matchPrediction";
+import league from "@/components/livescore/league";
+import matchlivescore from "@/components/livescore/matchlivescore";
 import calendar from "@/components/matchPrediction/calendar";
-import containerdetail from "@/components/detailprediction/containerdetail";
+import containerdetail from "@/components/detaillivescore/containerdetaillivescore";
 import GetData from "../modules/get_data";
 import { mapGetters } from "vuex";
 let getdata = new GetData();
 export default {
-  name: "predictions",
+  name: "livescore",
   data() {
     return {
-      inplayprediction: [],
-      inplayExpired: [],
-      pregame: [],
-      expiredPregame: [],
-      leagueExpInplay: [],
-      leagueExpPregame: [],
-      leagueInplay: [],
-      leaguePregame: [],
-      getData: getdata
+      leagueLiveScoreLeft: [],
+      leagueLiveScoreRight: [],
+      livescore:[],
+      livescoreStats:[],
+      livescoreTimeLine:[]
     };
   },
   computed: {
@@ -80,7 +56,7 @@ export default {
   components: {
     calendar,
     league,
-    matchprediction,
+    matchlivescore,
     containerdetail
   },
   mounted() {
@@ -91,7 +67,7 @@ export default {
       (parseInt(today.getMonth()) + 1) +
       "-" +
       today.getDate();
-    getdata.getDataPreInplay(this, dateselect);
+    getdata.getDataLiveScore(this);
     this.$nextTick(() => {
       if (this.$el.clientWidth < 672) {
         this.$store.commit("sethideDetail", true);
@@ -117,7 +93,7 @@ export default {
     display: grid !important;
     justify-items: center;
   }
-  .inplay{
+  .inplay {
     margin-right: 0px !important;
   }
 }
@@ -125,7 +101,9 @@ export default {
   .detail {
     max-width: 456px;
   }
-  
+  .inplay {
+    margin-right: 8px !important;
+  }
 }
 @media (min-width: 672px) {
   .colright {
@@ -142,14 +120,6 @@ export default {
   .detail {
     max-width: 512px;
     min-width: 320px;
-  }
-
-  .inplay{
-    margin-right: 8px !important;
-  }
-
-  .pregame{
-    margin-right: 8px !important;
   }
 }
 
@@ -170,7 +140,7 @@ export default {
   }
 }
 
-.predictions {
+.livescore {
   background-color: #444;
   height: 100%;
   display: flex;
@@ -210,12 +180,14 @@ export default {
   max-width: 360px;
   min-width: 320px;
   width: 100%;
-  /* margin-right: 8px; */
+  margin-right: 8px;
+  background-color: #fff;
 }
 .pregame {
   max-width: 360px;
   min-width: 320px;
   width: 100%;
+  background-color: #fff;
   /* margin-right: 8px; */
 }
 .footer {

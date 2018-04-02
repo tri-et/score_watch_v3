@@ -6,6 +6,7 @@ class GetData {
   constructor() {
     this.olddate = "";
     this.timeoutfirstload = [];
+    this.olddateLivescore="";
   }
 
   checkLeague(leaguename, leagueArray) {
@@ -21,7 +22,7 @@ class GetData {
     let that = this
     this.olddate = dateSelect
     $.ajax({
-      url: 'http://localhost:8000/score_watch_v3/index.php/api/get_running/' + this.olddate,
+      url: 'index.php/api/get_running/' + this.olddate,
       jsonp: 'callback',
       dataType: 'jsonp',
       success: function (response) {
@@ -106,7 +107,7 @@ class GetData {
     let that = this
     this.olddate = dateSelect
     $.ajax({
-      url: 'http://localhost:8000/score_watch_v3/index.php/api/get_pregame/' + this.olddate,
+      url: '/index.php/api/get_pregame/' + this.olddate,
       jsonp: 'callback',
       dataType: 'jsonp',
       success: function (response) {
@@ -165,7 +166,7 @@ class GetData {
   getDataExpiredPregame(app) {
     let that = this
     $.ajax({
-      url: 'http://localhost:8000/score_watch_v3/index.php/api/get_expired_pregame',
+      url: 'index.php/api/get_expired_pregame',
       jsonp: 'callback',
       dataType: 'jsonp',
       success: function (response) {
@@ -181,11 +182,17 @@ class GetData {
     )
   }
 
+  getDataLiveScoreByDate(datetime){
+    return axios.get(
+      'http://www.hasilskor.com/API/JSON.aspx?date='+datetime+'&sport=soccer&s=26PDpiffaaBbGrBdfgnrK2pknndskc1f3IMeKLW6PqdprBMHMqSTQ7gcmlcx7jZMxmyeTTBXRqwDh5p044MJHrf',
+    )
+  }
+
   getDataPreInplay(app, dateSelect) {
     let that = this
     this.olddate = dateSelect
-    let urlInplay = 'http://localhost:8000/score_watch_v3/index.php/api/get_running/' + this.olddate
-    let urlPregame = 'http://localhost:8000/score_watch_v3/index.php/api/get_pregame/' + this.olddate
+    let urlInplay = 'index.php/api/get_running/' + this.olddate
+    let urlPregame = 'index.php/api/get_pregame/' + this.olddate
     this.stopAlltimeout();
 
     $.when(
@@ -225,24 +232,24 @@ class GetData {
           inplayExpired.push(v)
         } else {
           var isExpired = []
-            v.detail.forEach(items => {
-              var minutes = parseInt(items.minutes)
-              var predictionTime = (new Date(items.time)).getTime()
-              var currentTime = (new Date()).getTime()
-              if (minutes < 70) {
-                if (currentTime - predictionTime > 13 * 60000) {
-                  isExpired.push(true);
-                } else {
-                  isExpired.push(false);
-                }
+          v.detail.forEach(items => {
+            var minutes = parseInt(items.minutes)
+            var predictionTime = (new Date(items.time)).getTime()
+            var currentTime = (new Date()).getTime()
+            if (minutes < 70) {
+              if (currentTime - predictionTime > 13 * 60000) {
+                isExpired.push(true);
               } else {
-                if (currentTime - predictionTime > 6 * 60000) {
-                  isExpired.push(true);
-                } else {
-                  isExpired.push(false);
-                }
+                isExpired.push(false);
               }
-            })
+            } else {
+              if (currentTime - predictionTime > 6 * 60000) {
+                isExpired.push(true);
+              } else {
+                isExpired.push(false);
+              }
+            }
+          })
 
           var expired = isExpired.every(function (item, index, array) {
             return item;
@@ -351,10 +358,13 @@ class GetData {
     })
   }
 
-  getDataLiveScore(app) {
+  getDataLiveScore(app,dateTime) {
+    this.olddateLivescore=dateTime
+    var currentTime=new Date()
     let that = this
+    var today=currentTime.getFullYear()+'-'+(currentTime.getMonth()+1)+'-'+currentTime.getDate()
     $.when(
-      this.getMatchLiveScore(),
+      dateTime==today?this.getMatchLiveScore():this.getDataLiveScoreByDate(this.olddateLivescore),
       this.getStatsData(),
       this.getTimeLineData(),
     ).done(function (matchlivescore, stats, timeline) {
@@ -394,85 +404,98 @@ class GetData {
         }
       }
       app.livescore = matchlivescore.data.r
-      /*app.leagueLiveScoreLeft = leaguename.splice(
-      	0,
-      	Math.round(leaguename.length / 2),
-      )
-      app.leagueLiveScoreRight = leaguename*/
       app.leagueLiveScoreLeft = leagueLeft
       app.leagueLiveScoreRight = leagueRight
       app.livescoreStats = that.formatJson(stats.data)
       app.livescoreTimeLine = that.formatJson(timeline.data)
-
-      let id = app.livescore[0][0]
-
-      if (!app.$store.state.iconMenuShow) {
-        if (!app.$store.state.isOpenLiveScoreDetail) {
-          app.$store.state.dataLivescoreDetail = {
-            match: app.livescore[0],
-            stats: app.$root.livescoreStats.r.find(x => x[2] == id) == undefined ? [] : app.$root.livescoreStats.r.find(x => x[2] == id),
-            timeline: app.$root.livescoreTimeLine.r.filter(x => x[2] == id),
-          }
-          app.$store.state.livescoreSelected = {
-            match_code: id,
-            isopening: false,
-          }
-        }
-        app.$store.state.isOpenLiveScoreDetail = true
+      var match_code=app.livescore[0][0]
+      var stats = app.livescoreStats.r.find(x => x[2] == match_code);
+      var timeline = app.livescoreTimeLine.r.filter(
+        x => x[2] == match_code
+      );
+      app.$store.commit('setdataSelectedLivescore', app.livescore[0])
+      app.$store.commit('setdataStats', stats==undefined?[]:stats)
+      app.$store.commit('setdatatimeline', timeline==undefined?[]:timeline)
+      app.$store.commit('setclborederLivescore',app.livescore[0][7])
+      app.$store.commit("setactivelivescore", app.livescore[0][0])
+      app.$store.commit("setloadingLivescore",false);
+      switch (app.livescore[0][3]) {
+        case "-1":
+          app.$store.commit("settypeLivescore", {
+            bgheader: "#767676",
+            colorheader: "#fff",
+            bglivescore: "#838383",
+            colorlivescore: "#fff"
+          });
+          break;
+        case "2":
+          app.$store.commit("settypeLivescore", {
+            bgheader: "#ff9250",
+            colorheader: "#fff",
+            bglivescore: "#ff9d61",
+            colorlivescore: "#fff"
+          });
+          break;
+        case "1":
+        case "3":
+          app.$store.commit("settypeLivescore", {
+            bgheader: "#50d278",
+            colorheader: "#fff",
+            bglivescore: "#61d685",
+            colorlivescore: "#fff"
+          });
+          break;
+        case "0":
+          app.$store.commit("settypeLivescore", {
+            bgheader: "#f0f0f0",
+            colorheader: "#000",
+            bglivescore: "#e3e3e3",
+            colorlivescore: "#888888"
+          });
+          break;
       }
-
-      //update data for detail panel
-      if (app.$store.state.dataLivescoreDetail.match[0] != undefined) {
-        let id = app.$store.state.dataLivescoreDetail.match[0]
-        app.$store.state.dataLivescoreDetail = {
-          match: app.livescore.find(x => x[0] == id),
-          stats: app.$root.livescoreStats.r.find(x => x[2] == id) == undefined ? [] : app.$root.livescoreStats.r.find(x => x[2] == id),
-          timeline: app.$root.livescoreTimeLine.r.filter(x => x[2] == id),
-        }
-      }
-
-      app.$store.state.timer = setTimeout(() => {
-        that.getDataLiveScore(app)
-      }, 5000)
+      setTimeout(() => {
+        that.getDataLiveScore(app, that.olddateLivescore)
+      }, 50000)
     })
   }
 
-  getDataLiveScoreByDate(date, app) {
-    let that = this
-    $('.loading').addClass('loading-is-visible')
-    clearTimeout(app.$store.state.timer)
-    $.ajax({
-      url: 'http://www.hasilskor.com/API/JSON.aspx?date=' +
-        date +
-        '&sport=soccer&s=26PDpiffaaBbGrBdfgnrK2pknndskc1f3IMeKLW6PqdprBMHMqSTQ7gcmlcx7jZMxmyeTTBXRqwDh5p044MJHrf',
-      success: function (res) {
-        var leaguename = []
-        for (var i = 0; i < res.r.length; i++) {
-          if (!that.checkLeague(res.r[i][5], leaguename)) {
-            leaguename.push({
-              league: res.r[i][5],
-              leagueShortName: res.r[i][6],
-              leagueColorCode: res.r[i][7],
-            })
-          }
-        }
-        app.livescore = res.r
-        app.leagueLiveScoreLeft = leaguename.splice(
-          0,
-          Math.round(leaguename.length / 2),
-        )
-        app.leagueLiveScoreRight = leaguename
-        $('.loading').removeClass('loading-is-visible')
-      },
-      error: function (error) {
-        app.league = []
-        app.livescore = []
-        app.leagueLiveScoreLeft = []
-        app.leagueLiveScoreRight = []
-        $('.loading').removeClass('loading-is-visible')
-      },
-    })
-  }
+  // getDataLiveScoreByDate(date, app) {
+  //   let that = this
+  //   $('.loading').addClass('loading-is-visible')
+  //   clearTimeout(app.$store.state.timer)
+  //   $.ajax({
+  //     url: 'http://www.hasilskor.com/API/JSON.aspx?date=' +
+  //       date +
+  //       '&sport=soccer&s=26PDpiffaaBbGrBdfgnrK2pknndskc1f3IMeKLW6PqdprBMHMqSTQ7gcmlcx7jZMxmyeTTBXRqwDh5p044MJHrf',
+  //     success: function (res) {
+  //       var leaguename = []
+  //       for (var i = 0; i < res.r.length; i++) {
+  //         if (!that.checkLeague(res.r[i][5], leaguename)) {
+  //           leaguename.push({
+  //             league: res.r[i][5],
+  //             leagueShortName: res.r[i][6],
+  //             leagueColorCode: res.r[i][7],
+  //           })
+  //         }
+  //       }
+  //       app.livescore = res.r
+  //       app.leagueLiveScoreLeft = leaguename.splice(
+  //         0,
+  //         Math.round(leaguename.length / 2),
+  //       )
+  //       app.leagueLiveScoreRight = leaguename
+  //       $('.loading').removeClass('loading-is-visible')
+  //     },
+  //     error: function (error) {
+  //       app.league = []
+  //       app.livescore = []
+  //       app.leagueLiveScoreLeft = []
+  //       app.leagueLiveScoreRight = []
+  //       $('.loading').removeClass('loading-is-visible')
+  //     },
+  //   })
+  // }
 
   getTimeLineData() {
     return axios.get(

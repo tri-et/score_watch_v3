@@ -18,8 +18,10 @@ class Api extends CI_Controller {
 		if (array_key_exists('callback', $_GET) == TRUE) {
 			$callback = $_GET['callback'];
 		}
-		$startTime=$dateObject[0].' 00:00:00';
-		$endTime=$dateObject[1].' 23:59:00' ;
+		// $startTime=$dateObject[0].' 00:00:00';
+		// $endTime=$dateObject[1].' 23:59:00' ;
+		$startTime=$dateObject[1].' 12:00:00';
+		$endTime=$dateObject[0].' 11:59:00' ;
 		 $prediction=$this->db->query('call get_pregame(?,?)',array($startTime,$endTime));
 		 $data=json_encode($prediction->result());
 			echo $callback . '(' . $data . ');';
@@ -32,8 +34,10 @@ class Api extends CI_Controller {
 		if (array_key_exists('callback', $_GET) == TRUE) {
 			$callback = $_GET['callback'];
 		}
-		$startTime=$dateObject[0].' 00:00:00';
-		$endTime=$dateObject[1].' 23:59:00' ;
+		// $startTime=$dateObject[0].' 00:00:00';
+		// $endTime=$dateObject[1].' 23:59:00' ;
+		$startTime=$dateObject[1].' 12:00:00';
+		$endTime=$dateObject[0].' 11:59:00' ;
 		$this->db->trans_begin();
 		$dtmatch=$this->db->query('call get_prediction_inplay(?,?)',array($startTime,$endTime));
 		mysqli_next_result( $this->db->conn_id );
@@ -242,7 +246,8 @@ class Api extends CI_Controller {
 	}
 
 	public function workingdate($date){
-		$dt=array(date('Y-m-d',strtotime('-1 day',strtotime($date))),date('Y-m-d',strtotime($date)));
+		// $dt=array(date('Y-m-d',strtotime('-1 day',strtotime($date))),date('Y-m-d',strtotime($date)));
+		$dt=array(date('Y-m-d',strtotime('+1 day',strtotime($date))),date('Y-m-d',strtotime($date)));
 		return $dt;
 	}
 }

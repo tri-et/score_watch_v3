@@ -13,13 +13,35 @@ export default new Vuex.Store({
       colorheader: '#767676',
       colorprediction: '#f0f0f0'
     },
+    typeLivescore: {
+      bgheader: '#f0f0f0',
+      colorheader: '#000',
+      bglivescore: '#e3e3e3',
+      colorlivescore: '#888888'
+    },
     isopenHelp: false,
     isopenMenuSideBar: false,
     shrink: false,
     hideDetail: true,
-    menuActive:'predictions'
+    menuActive: 'predictions',
+    dataSelectedLivescore: [],
+    dataStats: [],
+    datatimeline:[],
+    activelivescore:null,
+    clborederLivescore:"",
+    titleMenu:"predictions",
+    loadingLivescore:false
   },
   getters: {
+    loadingLivescore(state) {
+      return state.loadingLivescore
+    },
+    titleMenu(state) {
+      return state.titleMenu
+    },
+    clborederLivescore(state) {
+      return state.clborederLivescore
+    },
     calendarPre(state) {
       return state.calendarPre
     },
@@ -38,6 +60,9 @@ export default new Vuex.Store({
     typePrediction(state) {
       return state.typePrediction
     },
+    typeLivescore(state) {
+      return state.typeLivescore
+    },
     isopenHelp(state) {
       return state.isopenHelp
     },
@@ -52,9 +77,30 @@ export default new Vuex.Store({
     },
     menuActive(state) {
       return state.menuActive
+    },
+    dataSelectedLivescore(state) {
+      return state.dataSelectedLivescore
+    },
+    dataStats(state) {
+      return state.dataStats
+    },
+    datatimeline(state) {
+      return state.datatimeline
+    },
+    activelivescore(state) {
+      return state.activelivescore
     }
   },
   mutations: {
+    setloadingLivescore(state, val) {
+      state.loadingLivescore = val
+    },
+    settitleMenu(state, val) {
+      state.titleMenu = val
+    },
+    setclborederLivescore(state, val) {
+      state.clborederLivescore = val
+    },
     setcalendarPre(state, val) {
       state.calendarPre = val
     },
@@ -85,8 +131,23 @@ export default new Vuex.Store({
     sethideDetail(state, val) {
       state.hideDetail = val
     },
-    setmenuActive(state, val){
+    setmenuActive(state, val) {
       state.menuActive = val
+    },
+    setdataSelectedLivescore(state, val) {
+      state.dataSelectedLivescore = val
+    },
+    settypeLivescore(state, val) {
+      state.typeLivescore = val
+    },
+    setdataStats(state, val) {
+      state.dataStats = val
+    },
+    setdatatimeline(state, val) {
+      state.datatimeline = val
+    },
+    setactivelivescore(state, val) {
+      state.activelivescore = val
     }
   },
   actions: {}
