@@ -4,7 +4,7 @@
       <i class="material-icons">keyboard_arrow_left</i>
     </div>
     <div class="date">
-      <div v-for="(item,index) in days" :key="index" :class="{'active-date':(index==calendarPre)}" @click="selectDate(item,index,$event)">
+      <div v-for="(item,index) in days" :key="index" :class="{'active-date':(index==calendarLiveScore)}" @click="selectDate(item,index,$event)">
         <span>{{item|date}}</span><br style="clear:both">
         <span>{{item|day}}</span>
       </div>
@@ -27,7 +27,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["calendarPre"])
+    ...mapGetters(["calendarLiveScore"])
   },
   filters: {
     date(val) {
@@ -95,7 +95,7 @@ export default {
       this.$store.commit("setloadingLivescore",true);
       var oldDate =item.getFullYear() + "-" + (item.getMonth() + 1) + "-" + item.getDate();
       this.$parent.getData.getDataLiveScore(this.$parent, oldDate);
-      this.$store.commit("setcalendarPre", index);
+      this.$store.commit("setcalendarLiveScore", index);
     },
     setDateSelectedCenter(currentPositionclick) {
       let outer = this.$el.querySelector(".date").clientWidth;

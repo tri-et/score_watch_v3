@@ -4,7 +4,7 @@
       <i class="material-icons">keyboard_arrow_left</i>
     </div>
     <div class="date">
-      <div v-for="(item,index) in days" :key="index" :class="{'active-date':(index==calendarPre)}" @click="selectDate(item,index,$event)">
+      <div v-for="(item,index) in days" :key="index" :class="{'active-date':(index==calendarPre),'futuredates':index>14}" @click="selectDate(item,index,$event)">
         <span>{{item|date}}</span><br style="clear:both">
         <span>{{item|day}}</span>
       </div>
@@ -19,7 +19,7 @@
 import $ from "jquery";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import GetData from "../../modules/get_data";
-let getdata=new GetData();
+let getdata = new GetData();
 
 export default {
   data() {
@@ -91,21 +91,30 @@ export default {
       let inner = this.$el.querySelector(".date").scrollWidth;
       $(this.$el.querySelector(".date")).scrollLeft((inner - outer) / 2);
     },
-    selectDate(item, index,event) {
-      this.setDateSelectedCenter(event.currentTarget.offsetLeft)
-      var oldDate=item.getFullYear()+'-'+(item.getMonth()+1)+'-'+item.getDate()
-      this.$parent.getData.getDataPreInplay(this.$parent,oldDate)
-      this.$store.commit('setcalendarPre',index)
+    selectDate(item, index, event) {
+      var today = new Date();
+      if (today.getTime() >= item.getTime()) {
+        this.$store.commit("setloadingPredictions",true)
+        this.setDateSelectedCenter(event.currentTarget.offsetLeft);
+        var oldDate =
+          item.getFullYear() +
+          "-" +
+          (item.getMonth() + 1) +
+          "-" +
+          item.getDate();
+        this.$parent.getData.getDataPreInplay(this.$parent, oldDate);
+        this.$store.commit("setcalendarPre", index);
+      } 
     },
     setDateSelectedCenter(currentPositionclick) {
-      let outer = this.$el.querySelector('.date').clientWidth
-      let inner = this.$el.querySelector('.date').scrollWidth
-      let centerposition = outer / 2
+      let outer = this.$el.querySelector(".date").clientWidth;
+      let inner = this.$el.querySelector(".date").scrollWidth;
+      let centerposition = outer / 2;
 
-      let position = currentPositionclick - centerposition
-      $(this.$el.querySelector('.date')).animate({
+      let position = currentPositionclick - centerposition;
+      $(this.$el.querySelector(".date")).animate({
         scrollLeft: currentPositionclick - outer / 2 + 10
-      })
+      });
     }
   },
   created() {
@@ -150,7 +159,7 @@ export default {
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
-.date::-webkit-scrollbar{
+.date::-webkit-scrollbar {
   display: none !important;
 }
 .date div {
@@ -161,16 +170,20 @@ export default {
   font-size: 14px;
   font-weight: 500;
   color: #4e4e4e;
+  transition: background-color 1s ease-out;
+}
+.date div[class="futuredates"] {
+  cursor: default !important;
 }
 .date div span:nth-child(3) {
   font-size: 12px !important;
 }
 
-.date div:hover {
-  background-color: #444;
+.date div:not(.futuredates):hover {
+  background-color: #333;
 }
 .active-date {
-  background-color: #444;
+  background-color: #333;
   color: #fff !important;
 }
 </style>

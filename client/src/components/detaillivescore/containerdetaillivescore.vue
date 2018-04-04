@@ -2,7 +2,7 @@
   <div class="containerdetail" :class="{'shrink':shrink}">
     <tabbar></tabbar>
     <headerdetail></headerdetail>
-    <div style="height: 100%;position: relative;">
+    <div style="height: 100%;position: relative;background-color:#fff">
       <div class="content-detail">
         <headerstats></headerstats>
         <ul>

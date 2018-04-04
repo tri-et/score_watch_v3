@@ -6,8 +6,9 @@
     <menusidebar></menusidebar>
   </div>
 </template>
+
 <script>
-import menuheader from "@/components/menuheader";
+import menuheader from "@/components/menuHeader";
 import help from "@/components/help";
 import menusidebar from "@/components/menuSideBar";
 export default {
@@ -26,14 +27,21 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   max-width: 1280px;
-  min-width: 320px;
   margin: auto;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  font-family: Roboto;
+  min-width: 320px;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
   height: 100%;
   position: fixed;
-  top:0;
   left: 0;
   right: 0;
 }
+
 ::-webkit-scrollbar {
   width: 4px;
 }

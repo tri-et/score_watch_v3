@@ -65,7 +65,7 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
-  z-index: 2;
+  z-index: 4;
   display: none;
   top:0;
 }

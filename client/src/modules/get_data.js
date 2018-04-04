@@ -22,7 +22,7 @@ class GetData {
     let that = this
     this.olddate = dateSelect
     $.ajax({
-      url: 'index.php/api/get_running/' + this.olddate,
+      url: 'http://localhost:8000/score_watch_v3/index.php/api/get_running/' + this.olddate,
       jsonp: 'callback',
       dataType: 'jsonp',
       success: function (response) {
@@ -107,7 +107,7 @@ class GetData {
     let that = this
     this.olddate = dateSelect
     $.ajax({
-      url: '/index.php/api/get_pregame/' + this.olddate,
+      url: 'http://localhost:8000/score_watch_v3/index.php/api/get_pregame/' + this.olddate,
       jsonp: 'callback',
       dataType: 'jsonp',
       success: function (response) {
@@ -191,8 +191,8 @@ class GetData {
   getDataPreInplay(app, dateSelect) {
     let that = this
     this.olddate = dateSelect
-    let urlInplay = 'index.php/api/get_running/' + this.olddate
-    let urlPregame = 'index.php/api/get_pregame/' + this.olddate
+    let urlInplay = 'http://localhost:8000/score_watch_v3/index.php/api/get_running/' + this.olddate
+    let urlPregame = 'http://localhost:8000/score_watch_v3/index.php/api/get_pregame/' + this.olddate
     this.stopAlltimeout();
 
     $.when(
@@ -347,7 +347,7 @@ class GetData {
         });
         app.$store.commit("setboderActive", 'expiredinplay')
       }
-
+      app.$store.commit("setloadingPredictions",false)
       that.timeoutfirstload.push(setTimeout(() => {
         that.getDataInPlay(app, that.olddate)
       }, 3000))

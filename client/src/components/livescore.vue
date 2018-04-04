@@ -23,8 +23,11 @@
             </template>
           </div>
           <div class="loading" :class="{'loading-visible':loadingLivescore}">
-            <div>
-              <span>Loading...</span>
+            <div class="lds-ring">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
             </div>
           </div>
         </div>
@@ -32,7 +35,6 @@
           <span>All Right Reserved. &copy; 2018. Powered by In-Play </span>
         </div>
       </div>
-      <div>loading</div>
     </div>
     <div class="colright" onclick="event.cancelBubble=true;" :class="{'container-detail-visible':isOpenDetailPrediction,'container-detail-hidden':hideDetail}">
       <div class="detail">
@@ -62,7 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["isOpenDetailPrediction", "hideDetail","loadingLivescore"])
+    ...mapGetters(["isOpenDetailPrediction", "hideDetail", "loadingLivescore"])
   },
   components: {
     calendar,
@@ -91,8 +93,10 @@ export default {
 @media (min-width: 320px) {
   .colright {
     width: 100%;
-    position: absolute;
+    /* position: absolute; */
     top: 0;
+    position: fixed;
+    z-index: 3;
   }
   .colleft {
     width: 100%;
@@ -117,6 +121,7 @@ export default {
   .colright {
     position: unset !important;
     flex: 1 !important;
+    z-index: 2 !important;
   }
   .colleft {
     width: 352px !important;
@@ -152,6 +157,9 @@ export default {
   background-color: #444;
   height: 100%;
   display: flex;
+  position: absolute;
+  width: 100%;
+  top: 64px;
 }
 .nomatch {
   background-color: #f0f0f0;
@@ -163,6 +171,7 @@ export default {
 }
 .colleft {
   background-color: #444;
+  z-index: 1;
 }
 .colright {
   background-color: rgba(0, 0, 0, 0.5);
@@ -179,8 +188,8 @@ export default {
   overflow-x: hidden;
   position: relative;
   height: 100%;
-  max-height: calc(100% - 142px);
-  min-height: calc(100% - 142px);
+  max-height: calc(100% - 79px);
+  min-height: calc(100% - 79px);
   padding-top: 16px;
   -webkit-overflow-scrolling: touch;
 }
@@ -235,32 +244,55 @@ export default {
   width: 100%;
 }
 .loading {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
   width: 100%;
   height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
   top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  margin: auto;
   display: none;
 }
 .loading-visible {
   display: block !important;
 }
-.loading div:first-of-type {
-  width: 100px;
+.lds-ring {
+  display: inline-block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
-  top: 0;
-  bottom: 0;
-  height: 100px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
   position: absolute;
-  font-size: 24px;
-  font-weight: bold;
-  color: #fff;
+  width: 40px;
+  height: 40px;
+  margin: 6px;
+  border: 6px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
 

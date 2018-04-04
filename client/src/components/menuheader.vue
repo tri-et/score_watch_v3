@@ -2,10 +2,10 @@
   <header>
     <nav>
       <ul>
-        <li @click="openSideBar()">
+        <li  @click="openSideBar()">
           <i class="material-icons">menu</i>
         </li>
-        <li>
+        <li @click="test()">
           <a class="logo"></a>
         </li>
         <li>
@@ -17,15 +17,13 @@
           </router-link>
         </li>
         <li>
-          <router-link :to="{ path: '/livescore'}" @click.native="selectMenu('livescores')">
+          <router-link :to="{ path: '/livescore'}" @click.native="selectMenu('pregame')">
             <div>live score</div>
             <div class="circle-content">
-              <div class="circle" :class="{'circle-isvisibel':menuActive=='livescores'}"></div>
+              <div class="circle" :class="{'circle-isvisibel':menuActive=='pregame'}"></div>
             </div>
           </router-link>
         </li>
-        <!-- <li><a>help</a></li>
-        <li><a>about</a></li> -->
         <li>
           <a class="logo"></a>
         </li>
@@ -33,13 +31,13 @@
           <a><img src="../assets/images/Help Icon@1x.svg" alt="" width="24" height="24"></a>
         </li>
       </ul>
-    </nav>
-    <resize-observer @notify="setTitleMenu" />
+    </nav><resize-observer @notify="setTitleMenu" />
   </header>
 </template>
 <script>
 import { mapGetters } from "vuex";
 export default {
+  name: "menuheader",
   computed: {
     ...mapGetters(["menuActive","titleMenu"])
   },
@@ -47,9 +45,11 @@ export default {
     openHelp() {
       this.$store.commit("setisopenHelp", true);
     },
+    test(){
+alert('test');
+    },
     openSideBar() {
       this.$store.commit("setisopenMenuSideBar", true);
-      alert('sds');
     },
     selectMenu(menuType) {
       this.$store.commit("setmenuActive", menuType);
@@ -59,7 +59,6 @@ export default {
       if(widthHeader>=843){
         this.$store.commit("settitleMenu", "predictions");
       }
-
       if(widthHeader>=672){
         this.$store.commit("sethideDetail", false);
         this.$store.commit("setisOpenDetailPrediction", false);
@@ -104,23 +103,29 @@ export default {
     padding: 8px;
   }
 
+  li:nth-child(6):hover{
+    background-color: #737373 !important;
+  }
+
   .circle-content {
     display: flex;
   }
 
   li {
-    padding: 8px 15px 0px 15px;
+    padding: 4px 15px 0px 15px;
   }
 }
 
 header {
   background-color: #444;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  z-index: 3;
   min-width: 320px;
   width: 100%;
   max-width: 1280px;
   font-size: 18px;
+  position: absolute;
+    top: 0;
 }
 ul {
   list-style-type: none;
@@ -134,11 +139,12 @@ li {
   float: left;
   display: grid;
   align-items: center;
-  height: 56px;
+  height: 62px;
 
   text-transform: uppercase;
   color: white;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 li a {
@@ -164,17 +170,18 @@ li:last-child {
   height: 48px;
   width: 48px;
   border-radius: 8px;
-  background: linear-gradient(180deg, #e8e8e8 0%, #ffffff 100%);
+  background: #000;
+  /* background: linear-gradient(180deg, #e8e8e8 0%, #ffffff 100%);
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-    0 2px 3px 0 rgba(0, 0, 0, 0.34);
+    0 2px 3px 0 rgba(0, 0, 0, 0.34); */
 }
 
 .circle-content {
   justify-content: center;
 }
 .circle {
-  width: 8px;
-  height: 8px;
+  width: 72px;
+  height: 4px;
   background: #fff;
   -moz-border-radius: 50px;
   -webkit-border-radius: 50px;

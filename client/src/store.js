@@ -4,7 +4,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
-    calendarPre: 14,
+    calendarPre: 14,//set active Today
+    calendarLiveScore: 14,
     activePrediction: null,
     boderActive: 'inplay',
     dataSelectedPrediction: {},
@@ -30,9 +31,16 @@ export default new Vuex.Store({
     activelivescore:null,
     clborederLivescore:"",
     titleMenu:"predictions",
-    loadingLivescore:false
+    loadingLivescore:false,
+    loadingPredictions:false
   },
   getters: {
+    calendarLiveScore(state) {
+      return state.calendarLiveScore
+    },
+    loadingPredictions(state) {
+      return state.loadingPredictions
+    },
     loadingLivescore(state) {
       return state.loadingLivescore
     },
@@ -92,6 +100,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setcalendarLiveScore(state, val) {
+      state.calendarLiveScore = val
+    },
+    setloadingPredictions(state, val) {
+      state.loadingPredictions = val
+    },
     setloadingLivescore(state, val) {
       state.loadingLivescore = val
     },

@@ -110,8 +110,8 @@ ul li:nth-child(2) {
 }
 .sidebar {
   background-color: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  z-index: 5 !important;
+  position: absolute;
+  z-index: 2;
   width: 100%;
   height: 100%;
   transform: translateX(-200%);
