@@ -279,17 +279,17 @@ export default {
   width: 10%;
 }
 .stats div:nth-child(2) {
-  width: 30%;
+  width: 26.5%;
   text-align: right;
   padding-right: 5px;
 }
 .stats div:nth-child(3) {
-  width: 20%;
+  width: 29%;
   text-align: center;
   color: #c5c5c5;
 }
 .stats div:nth-child(4) {
-  width: 30%;
+  width: 26.5%;
   text-align: left;
   padding-left: 5px;
 }

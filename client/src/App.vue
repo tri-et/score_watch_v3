@@ -31,7 +31,6 @@ export default {
   padding: 0px;
   display: flex;
   flex-direction: column;
-  font-family: Roboto;
   min-width: 320px;
   justify-content: flex-start;
   align-items: stretch;

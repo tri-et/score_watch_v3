@@ -114,7 +114,7 @@ ul li:nth-child(2) {
   z-index: 5 !important;
   width: 100%;
   height: 100%;
-  transform: translateX(-200%);
+  transform: translateY(-100%);
   transition: transform 0.8s linear;
   top: 0;
 }
@@ -128,12 +128,13 @@ ul li:nth-child(2) {
   margin-top: 5px;
 }
 .sidebar-visible {
-  transform: translateX(0) !important;
+  /* transform: translateX(0) !important; */
+  transform: translateY(0) !important
 }
 
 .sidebar-content {
-  max-width: 360px;
-  min-width: 320px;
+  /* max-width: 360px;
+  min-width: 320px; */
   width: 100%;
   height: 100%;
   background-color: #333;

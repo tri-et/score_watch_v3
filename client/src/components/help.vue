@@ -47,11 +47,11 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import help1 from "../assets/images/help-1.png"
+import help1 from "../assets/images/help-1.png";
 export default {
-  methods:{
-    closeHelp(){
-      this.$store.commit('setisopenHelp',false)
+  methods: {
+    closeHelp() {
+      this.$store.commit("setisopenHelp", false);
     }
   },
   computed: {
@@ -66,11 +66,13 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   z-index: 4;
-  display: none;
-  top:0;
+  /* display: none; */
+  top: 0;
+  transform: scale(0);
+  transition: transform 0.5s ease;
 }
-.is-visible{
-  display: block !important;
+.is-visible {
+  transform: scale(1) !important;
 }
 .help-content {
   background-color: #ffffff;
@@ -157,7 +159,7 @@ export default {
   color: #a4a4a4;
 }
 .help-content--content li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 </style>
 

@@ -2,7 +2,7 @@
   <div class="livescore">
     <div class="colleft">
       <div class="calendar">
-        <calendar></calendar>
+        <calendarlivescore></calendarlivescore>
       </div>
       <div class="container">
         <div class="content">
@@ -22,17 +22,17 @@
               <matchlivescore :bordercolor="item.leagueColorCode" :items="items" v-for="(items,index) in livescore" v-if="items[5]==item.league" :key="index+items[0]"></matchlivescore>
             </template>
           </div>
-          <div class="loading" :class="{'loading-visible':loadingLivescore}">
-            <div class="lds-ring">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          </div>
         </div>
         <div class="footer">
           <span>All Right Reserved. &copy; 2018. Powered by In-Play </span>
+        </div>
+      </div>
+      <div class="loading" :class="{'loading-visible':loadingLivescore}">
+        <div class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
 <script>
 import league from "@/components/livescore/league";
 import matchlivescore from "@/components/livescore/matchlivescore";
-import calendar from "@/components/livescore/calenderlivescore";
+import calendarlivescore from "@/components/livescore/calenderlivescore";
 import containerdetail from "@/components/detaillivescore/containerdetaillivescore";
 import GetData from "../modules/get_data";
 import { mapGetters } from "vuex";
@@ -67,7 +67,7 @@ export default {
     ...mapGetters(["isOpenDetailPrediction", "hideDetail", "loadingLivescore"])
   },
   components: {
-    calendar,
+    calendarlivescore,
     league,
     matchlivescore,
     containerdetail
@@ -172,6 +172,7 @@ export default {
 .colleft {
   background-color: #444;
   z-index: 1;
+  position: relative;
 }
 .colright {
   background-color: rgba(0, 0, 0, 0.5);
@@ -188,8 +189,8 @@ export default {
   overflow-x: hidden;
   position: relative;
   height: 100%;
-  max-height: calc(100% - 79px);
-  min-height: calc(100% - 79px);
+  max-height: calc(100% - 143px);
+  min-height: calc(100% - 143px);
   padding-top: 16px;
   -webkit-overflow-scrolling: touch;
 }
@@ -211,7 +212,7 @@ export default {
   height: 64px;
   background-color: #444;
   box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.1);
-  margin-top: 10px;
+  margin-top: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,6 +232,7 @@ export default {
   text-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
   background-color: #f0f0f0;
   position: relative;
+  margin-bottom: 9px;
 }
 .container-detail-visible {
   transform: translateX(200%);
@@ -248,8 +250,11 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
-  top: 0;
+  top: 62px;
   display: none;
+}
+.content {
+  min-height: calc(100% - 88px);
 }
 .loading-visible {
   display: block !important;

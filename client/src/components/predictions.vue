@@ -42,7 +42,8 @@
         <div class="footer">
           <span>All Right Reserved. &copy; 2018. Powered by In-Play </span>
         </div>
-        <div class="loading" :class="{'loading-active':loadingPredictions}">
+      </div>
+      <div class="loading" :class="{'loading-active':loadingPredictions}">
           <div class="lds-ring">
             <div></div>
             <div></div>
@@ -50,7 +51,6 @@
             <div></div>
           </div>
         </div>
-      </div>
     </div>
     <div class="colright" onclick="event.cancelBubble=true;" :class="{'container-detail-visible':isOpenDetailPrediction,'container-detail-hidden':hideDetail}">
       <div class="detail">
@@ -104,14 +104,16 @@ export default {
       "-" +
       today.getDate();
     getdata.getDataPreInplay(this, dateselect);
-    this.$nextTick(() => {
+    // this.$nextTick(() => {
       if (this.$el.clientWidth < 672) {
         this.$store.commit("sethideDetail", true);
         this.$store.commit("setisOpenDetailPrediction", true);
+        this.$store.commit("setisMobile", false);
       } else {
         this.$store.commit("sethideDetail", false);
+        this.$store.commit("setisMobile", true);
       }
-    });
+    // });
   }
 };
 </script>
@@ -120,7 +122,7 @@ export default {
   .colright {
     width: 100%;
     /* position: absolute; */
-     top: 0;
+    top: 0;
     position: fixed;
     z-index: 3;
   }
@@ -188,7 +190,7 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
-  top: 0;
+  top: 62px;
   display: none;
 }
 
@@ -213,6 +215,7 @@ export default {
 }
 .colleft {
   background-color: #333;
+  position: relative;
 }
 .colright {
   background-color: rgba(0, 0, 0, 0.5);
@@ -229,8 +232,8 @@ export default {
   overflow-x: hidden;
   position: relative;
   height: 100%;
-  max-height: calc(100% - 79px);
-  min-height: calc(100% - 79px);
+  max-height: calc(100% - 143px);
+  min-height: calc(100% - 143px);
   padding-top: 16px;
   -webkit-overflow-scrolling: touch;
 }
@@ -250,7 +253,7 @@ export default {
   height: 64px;
   background-color: #333;
   box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.1);
-  margin-top: 10px;
+  margin-top: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,7 +273,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  text-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.54);
 }
 .header--inplay {
   background-color: #ff7c7c;
@@ -287,6 +290,9 @@ export default {
 }
 .container-detail-hidden {
   visibility: hidden;
+}
+.content {
+  min-height: calc(100% - 88px);
 }
 .detail {
   height: 100%;

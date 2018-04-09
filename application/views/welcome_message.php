@@ -3,9 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 <html lang="en" style="overflow:hidden;touch-action: none;">
   <!-- 
-    version 0.9.2
-    change style header
-    Date picker
+    version 0.9.4
  -->
 <head>
 <head>

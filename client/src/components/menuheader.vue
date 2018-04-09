@@ -5,7 +5,7 @@
         <li  @click="openSideBar()">
           <i class="material-icons">menu</i>
         </li>
-        <li @click="test()">
+        <li>
           <a class="logo"></a>
         </li>
         <li>
@@ -44,9 +44,6 @@ export default {
   methods: {
     openHelp() {
       this.$store.commit("setisopenHelp", true);
-    },
-    test(){
-alert('test');
     },
     openSideBar() {
       this.$store.commit("setisopenMenuSideBar", true);

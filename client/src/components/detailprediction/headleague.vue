@@ -32,7 +32,6 @@ export default {
   display: flex;
   align-items: center;
   margin-left: 24px;
-  flex: 1;
 }
 .icon_league {
   height: 24px;

@@ -10,6 +10,7 @@ export default new Vuex.Store({
     boderActive: 'inplay',
     dataSelectedPrediction: {},
     isOpenDetailPrediction: false,
+    isMobile:true,
     typePrediction: {
       colorheader: '#767676',
       colorprediction: '#f0f0f0'
@@ -35,6 +36,9 @@ export default new Vuex.Store({
     loadingPredictions:false
   },
   getters: {
+    isMobile(state) {
+      return state.isMobile
+    },
     calendarLiveScore(state) {
       return state.calendarLiveScore
     },
@@ -100,6 +104,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setisMobile(state, val) {
+      state.isMobile = val
+    },
     setcalendarLiveScore(state, val) {
       state.calendarLiveScore = val
     },

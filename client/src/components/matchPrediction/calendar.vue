@@ -49,7 +49,7 @@ export default {
       return month_names_short[val.getMonth()] + " " + val.getDate();
     },
     day(val) {
-      var day_names_short = ["Sun", "Mon", "Tue", "Web", "Thu", "Fri", "Sat"];
+      var day_names_short = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       let today = new Date();
       if (
         val.getFullYear() == today.getFullYear() &&
@@ -141,6 +141,7 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 4;
 }
 .right-arrow {
   width: 30px;
@@ -152,6 +153,7 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 4;
 }
 .date {
   flex: 1;
