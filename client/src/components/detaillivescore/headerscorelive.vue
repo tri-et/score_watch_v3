@@ -114,7 +114,7 @@ export default {
 .minute {
   border-bottom-left-radius: 130px;
   border-bottom-right-radius: 130px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   color: #fff;
   display: flex;

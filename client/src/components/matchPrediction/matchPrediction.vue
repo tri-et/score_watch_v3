@@ -1,9 +1,9 @@
 <template>
   <div class="containerpreidction">
     <div class="matchprediction" @click="selectedPrediction(items.idmatch)" 
-    :class="{'activeExpi':items.idmatch==activePrediction && (boderActive=='expiredpregame' || boderActive=='expiredinplay'),
-    'activePrediction':items.idmatch==activePrediction && boderActive=='inplay',
-    'activePregame':items.idmatch==activePrediction && boderActive=='pregame'}">
+    :class="{'activeExpi':items.idmatch==activePrediction && (boderActive=='expiredpregame' || boderActive=='expiredinplay') && isMobile,
+    'activePrediction':items.idmatch==activePrediction && boderActive=='inplay' && isMobile,
+    'activePregame':items.idmatch==activePrediction && boderActive=='pregame' && isMobile}">
       <match :typematch="typeprediction" :item="items"></match>
       <template v-for="(item,index) in items.detail">
         <prediction :teamscore="{'score_home':items.score_home,'score_away':items.score_away}" :live="typeprediction" :items="item" :key="index" v-show="typeprediction=='expiredinplay'||typeprediction=='inplay'"></prediction>
@@ -75,7 +75,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["activePrediction","boderActive"])
+    ...mapGetters(["activePrediction","boderActive","isMobile"])
   }
 };
 </script>

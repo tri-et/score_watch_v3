@@ -4,11 +4,13 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
-    calendarPre: 14,
+    calendarPre: 14,//set active Today
+    calendarLiveScore: 14,
     activePrediction: null,
     boderActive: 'inplay',
     dataSelectedPrediction: {},
     isOpenDetailPrediction: false,
+    isMobile:true,
     typePrediction: {
       colorheader: '#767676',
       colorprediction: '#f0f0f0'
@@ -30,9 +32,19 @@ export default new Vuex.Store({
     activelivescore:null,
     clborederLivescore:"",
     titleMenu:"predictions",
-    loadingLivescore:false
+    loadingLivescore:false,
+    loadingPredictions:false
   },
   getters: {
+    isMobile(state) {
+      return state.isMobile
+    },
+    calendarLiveScore(state) {
+      return state.calendarLiveScore
+    },
+    loadingPredictions(state) {
+      return state.loadingPredictions
+    },
     loadingLivescore(state) {
       return state.loadingLivescore
     },
@@ -92,6 +104,15 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setisMobile(state, val) {
+      state.isMobile = val
+    },
+    setcalendarLiveScore(state, val) {
+      state.calendarLiveScore = val
+    },
+    setloadingPredictions(state, val) {
+      state.loadingPredictions = val
+    },
     setloadingLivescore(state, val) {
       state.loadingLivescore = val
     },

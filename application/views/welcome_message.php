@@ -2,7 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 <html lang="en" style="overflow:hidden;touch-action: none;">
-  <!-- version 0.9.0 -->
+  <!-- 
+    version 0.9.4
+ -->
 <head>
 <head>
     <meta charset="utf-8">

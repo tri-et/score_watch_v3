@@ -48,9 +48,10 @@ export default {
   height: 48px;
   width: 48px;
   border-radius: 8px;
-  background: linear-gradient(180deg, #e8e8e8 0%, #ffffff 100%);
+  background: #000;
+  /* background: linear-gradient(180deg, #e8e8e8 0%, #ffffff 100%);
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-    0 2px 3px 0 rgba(0, 0, 0, 0.34);
+    0 2px 3px 0 rgba(0, 0, 0, 0.34); */
   margin-right: 8px;
 }
 </style>

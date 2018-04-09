@@ -15,7 +15,7 @@
               </matchprediction>
             </template>
             <div class="header header--expired">Expired in-play</div>
-            <div class="nomatch" v-show="leagueExpInplay.length==0">No matches to show</div>
+            <div class="nomatch" style="margin-bottom:16px" v-show="leagueExpInplay.length==0">No matches to show</div>
             <template v-for="(item,index) in leagueExpInplay">
               <league :key="index+'expinplay'" :leaguename="item.league"></league>
               <matchprediction v-for="(items,index) in inplayExpired" :key="index+items.idmatch" :items="items" v-if="item.league==items.league" typeprediction="expiredinplay">
@@ -43,6 +43,14 @@
           <span>All Right Reserved. &copy; 2018. Powered by In-Play </span>
         </div>
       </div>
+      <div class="loading" :class="{'loading-active':loadingPredictions}">
+          <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
     </div>
     <div class="colright" onclick="event.cancelBubble=true;" :class="{'container-detail-visible':isOpenDetailPrediction,'container-detail-hidden':hideDetail}">
       <div class="detail">
@@ -75,7 +83,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["isOpenDetailPrediction", "hideDetail"])
+    ...mapGetters([
+      "isOpenDetailPrediction",
+      "hideDetail",
+      "loadingPredictions"
+    ])
   },
   components: {
     calendar,
@@ -92,14 +104,16 @@ export default {
       "-" +
       today.getDate();
     getdata.getDataPreInplay(this, dateselect);
-    this.$nextTick(() => {
+    // this.$nextTick(() => {
       if (this.$el.clientWidth < 672) {
         this.$store.commit("sethideDetail", true);
         this.$store.commit("setisOpenDetailPrediction", true);
+        this.$store.commit("setisMobile", false);
       } else {
         this.$store.commit("sethideDetail", false);
+        this.$store.commit("setisMobile", true);
       }
-    });
+    // });
   }
 };
 </script>
@@ -107,8 +121,10 @@ export default {
 @media (min-width: 320px) {
   .colright {
     width: 100%;
-    position: absolute;
+    /* position: absolute; */
     top: 0;
+    position: fixed;
+    z-index: 3;
   }
   .colleft {
     width: 100%;
@@ -117,7 +133,7 @@ export default {
     display: grid !important;
     justify-items: center;
   }
-  .inplay{
+  .inplay {
     margin-right: 0px !important;
   }
 }
@@ -125,12 +141,12 @@ export default {
   .detail {
     max-width: 456px;
   }
-  
 }
 @media (min-width: 672px) {
   .colright {
     position: unset !important;
     flex: 1 !important;
+    z-index: 2 !important;
   }
   .colleft {
     width: 352px !important;
@@ -144,11 +160,11 @@ export default {
     min-width: 320px;
   }
 
-  .inplay{
+  .inplay {
     margin-right: 8px !important;
   }
 
-  .pregame{
+  .pregame {
     margin-right: 8px !important;
   }
 }
@@ -169,11 +185,25 @@ export default {
     justify-content: center;
   }
 }
+.loading {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 62px;
+  display: none;
+}
 
+.loading-active {
+  display: block !important;
+}
 .predictions {
   background-color: #444;
   height: 100%;
   display: flex;
+  position: absolute;
+  width: 100%;
+  top: 64px;
 }
 .nomatch {
   background-color: #f0f0f0;
@@ -184,7 +214,8 @@ export default {
   justify-content: center;
 }
 .colleft {
-  background-color: #444;
+  background-color: #333;
+  position: relative;
 }
 .colright {
   background-color: rgba(0, 0, 0, 0.5);
@@ -193,7 +224,7 @@ export default {
   transition: transform 1s linear;
 }
 .calendar {
-  background-color: #333;
+  background-color: #212121;
   height: 62px;
 }
 
@@ -201,8 +232,8 @@ export default {
   overflow-x: hidden;
   position: relative;
   height: 100%;
-  max-height: calc(100% - 142px);
-  min-height: calc(100% - 142px);
+  max-height: calc(100% - 143px);
+  min-height: calc(100% - 143px);
   padding-top: 16px;
   -webkit-overflow-scrolling: touch;
 }
@@ -220,9 +251,9 @@ export default {
 }
 .footer {
   height: 64px;
-  background-color: #444;
+  background-color: #333;
   box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.1);
-  margin-top: 10px;
+  margin-top: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -242,7 +273,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  text-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.54);
 }
 .header--inplay {
   background-color: #ff7c7c;
@@ -260,10 +291,54 @@ export default {
 .container-detail-hidden {
   visibility: hidden;
 }
+.content {
+  min-height: calc(100% - 88px);
+}
 .detail {
   height: 100%;
   float: right;
   width: 100%;
+  background-color: #fff;
+}
+.lds-ring {
+  display: inline-block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  margin: 6px;
+  border: 6px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
 

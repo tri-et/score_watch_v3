@@ -1,21 +1,26 @@
 <template>
   <div class="prediction" :style="bg">
     <div class="icongold"><img :src="setIcon(items,live)" alt="" width="24" height="24" :key="1233"></div>
-    <div class="teamname" :style="{'min-width':marquee?'73px':''}">
+    <div class="teamname" :style="{'min-width':marquee?'70px':''}">
       <span :class="{'marquee':marquee}">{{items.pick_hdp=="H"?items.team_home:items.team_away}}</span>&nbsp;
     </div>
     <resize-observer @notify="handleResize" />
     <div class="odds">
       <span v-show="live!='pregame'">&nbsp;{{'['+items.score_home+':'+items.score_away+']'}}</span>
       <span>{{items.sys_hdp}}</span>
-      <span>@</span>
-      <span>{{items.pick_hdp=="H"?items.sys_odds_home:items.sys_odds_away}}</span>
+      <span>&nbsp;@&nbsp;</span>
+      <odd :odd="items.pick_hdp=='H'?items.sys_odds_home:items.sys_odds_away"></odd>
+      <!-- <div>
+        <span>{{items.pick_hdp=="H"?items.sys_odds_home:items.sys_odds_away}}</span>
+        <span class="arrow"></span>
+      </div> -->
+
     </div>
     <div class="timer" v-show="live=='inplay'">
       <countdown :items="items"></countdown>
     </div>
     <div class="timer" v-show="live=='expiredinplay'">
-      <span>{{'expired['+items.minutes+'\']'}}</span>
+      <span>{{'expired ['+items.minutes+'\']'}}</span>
     </div>
     <div class="new" v-show="isnew">
       <span>new</span>
@@ -28,6 +33,7 @@ import lose_icon from "../../assets/images/lose_icon@1x.svg";
 import win_icon from "../../assets/images/win_icon@1x.svg";
 import draw_icon from "../../assets/images/draw_icon@1x.svg";
 import countdown from "./countdown";
+import odd from "./oddprediction";
 export default {
   props: {
     live: {
@@ -48,18 +54,26 @@ export default {
       },
       icon: pred_gold,
       marquee: false,
-      isnew: false
+      isnew: false,
+      arrow: ""
     };
   },
   components: {
-    countdown
+    countdown,
+    odd
   },
   methods: {
     setIcon(data, live) {
       var url = pred_gold;
       let hdp = parseFloat(data.sys_hdp);
-      let score_home =parseInt(this.teamscore.score_home) + (hdp > 0 ? hdp : 0) - parseInt(data.score_home);
-      let score_away =parseInt(this.teamscore.score_away) + (hdp < 0 ? Math.abs(hdp) : 0) - parseInt(data.score_away);
+      let score_home =
+        parseInt(this.teamscore.score_home) +
+        (hdp > 0 ? hdp : 0) -
+        parseInt(data.score_home);
+      let score_away =
+        parseInt(this.teamscore.score_away) +
+        (hdp < 0 ? Math.abs(hdp) : 0) -
+        parseInt(data.score_away);
       if (live == "expiredinplay" || live == "expiredpregame") {
         switch (data.pick_hdp) {
           case "H":
@@ -110,6 +124,29 @@ export default {
         this.isnew = false;
       }
     }
+  },
+  watch: {
+    items: function(newdata, oldvalue) {
+      let self = this;
+      if (oldvalue != undefined) {
+        if (newdata.match_code == oldvalue.match_code) {
+          if (parseFloat(newdata.odd) > parseFloat(oldvalue.odd)) {
+            this.arrow = "up";
+            setTimeout(() => {
+              self.arrow = "";
+            }, 3000);
+          } else if (parseFloat(newdata.odd) < parseFloat(oldvalue.odd)) {
+            this.arrow = "down";
+            setTimeout(() => {
+              self.arrow = "";
+            }, 3000);
+          } else {
+            this.arrow = "";
+          }
+        }
+      }
+    },
+    deep: true
   },
   created() {
     switch (this.live) {
@@ -177,6 +214,7 @@ div[class="prediction"]:not(:last-child) {
 .odds {
   font-size: 14px;
   flex: 1;
+  display: inherit;
 }
 .odds span:nth-child(4) {
   font-weight: 700;
@@ -205,6 +243,27 @@ div[class="prediction"]:not(:last-child) {
   /* min-width: 77px; */
   animation: leftmarquee 5s linear infinite;
 }
+/* .arrow {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  cursor: pointer;
+  vertical-align: middle;
+  display: inline-block;
+  opacity: 0;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.down {
+  border-top: 4px solid #ff7754;
+  opacity: 1;
+}
+
+.up {
+  border-bottom: 4px solid #2ace5f;
+  opacity: 1;
+} */
 @keyframes leftmarquee {
   0% {
     transform: translateX(100%);

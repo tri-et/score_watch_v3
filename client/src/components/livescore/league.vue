@@ -37,13 +37,6 @@ export default {
   position: absolute;flex-wrap: wrap;
     width: 100%;
 }
-/* .league > div:first-child {
-  display: flex;
-  align-items: center;
-} */
-/* .league span:first-of-type {
-  margin-right: 8px;
-} */
 
 .league div:last-of-type {
     overflow: hidden;

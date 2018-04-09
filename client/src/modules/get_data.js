@@ -107,7 +107,7 @@ class GetData {
     let that = this
     this.olddate = dateSelect
     $.ajax({
-      url: '/index.php/api/get_pregame/' + this.olddate,
+      url: 'index.php/api/get_pregame/' + this.olddate,
       jsonp: 'callback',
       dataType: 'jsonp',
       success: function (response) {
@@ -347,7 +347,7 @@ class GetData {
         });
         app.$store.commit("setboderActive", 'expiredinplay')
       }
-
+      app.$store.commit("setloadingPredictions",false)
       that.timeoutfirstload.push(setTimeout(() => {
         that.getDataInPlay(app, that.olddate)
       }, 3000))

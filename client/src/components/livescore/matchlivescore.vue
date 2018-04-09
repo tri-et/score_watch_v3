@@ -151,7 +151,7 @@ export default {
   padding: 7px 0px;
   line-height: 1.5;
   font-size: 14px;
-  box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -1px 5px -1px rgba(0, 0, 0, 0.2);
   margin: 8px 8px;
   cursor: pointer;
 }

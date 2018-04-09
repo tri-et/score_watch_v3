@@ -47,7 +47,7 @@ export default {
   text-align: left;
   padding-left: 20px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: bold;
 }
 </style>
 

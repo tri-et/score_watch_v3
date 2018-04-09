@@ -4,7 +4,7 @@
       <i class="material-icons">keyboard_arrow_left</i>
     </div>
     <div class="date">
-      <div v-for="(item,index) in days" :key="index" :class="{'active-date':(index==calendarPre)}" @click="selectDate(item,index,$event)">
+      <div v-for="(item,index) in days" :key="index" :class="{'active-date':(index==calendarLiveScore)}" @click="selectDate(item,index,$event)">
         <span>{{item|date}}</span><br style="clear:both">
         <span>{{item|day}}</span>
       </div>
@@ -18,7 +18,7 @@
 <script>
 import $ from "jquery";
 import { mapGetters, mapActions, mapMutations } from "vuex";
-import GetData from "../../modules/get_data";
+// import GetData from "../../modules/get_data";
 
 export default {
   data() {
@@ -27,7 +27,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["calendarPre"])
+    ...mapGetters(["calendarLiveScore"])
   },
   filters: {
     date(val) {
@@ -48,7 +48,7 @@ export default {
       return month_names_short[val.getMonth()] + " " + val.getDate();
     },
     day(val) {
-      var day_names_short = ["Sun", "Mon", "Tue", "Web", "Thu", "Fri", "Sat"];
+      var day_names_short = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       let today = new Date();
       if (
         val.getFullYear() == today.getFullYear() &&
@@ -92,10 +92,10 @@ export default {
     },
     selectDate(item, index, event) {
       this.setDateSelectedCenter(event.currentTarget.offsetLeft);
-      this.$store.commit("setloadingLivescore",true);
+      this.$store.commit("setloadingLivescore", true);
       var oldDate =item.getFullYear() + "-" + (item.getMonth() + 1) + "-" + item.getDate();
       this.$parent.getData.getDataLiveScore(this.$parent, oldDate);
-      this.$store.commit("setcalendarPre", index);
+      this.$store.commit("setcalendarLiveScore", index);
     },
     setDateSelectedCenter(currentPositionclick) {
       let outer = this.$el.querySelector(".date").clientWidth;
@@ -121,6 +121,7 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
+  background-color: #212121;
 }
 .left-arrow {
   width: 30px;
@@ -132,6 +133,7 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 4;
 }
 .right-arrow {
   width: 30px;
@@ -143,6 +145,7 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 4;
 }
 .date {
   flex: 1;
@@ -167,10 +170,10 @@ export default {
 }
 
 .date div:hover {
-  background-color: #444;
+  background-color: #333;
 }
 .active-date {
-  background-color: #444;
+  background-color: #333;
   color: #fff !important;
 }
 </style>
